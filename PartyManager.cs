@@ -20,7 +20,7 @@ public class PartyManager : MonoBehaviour
     private Inventory inven;
     public static PlayerUnit lastUnit { get; set; } //each time we show a unit, set lastUnit to that unit
     public static int lastUnitIndex { get; set; } //index of lastUnit in party
-    private Image portrait;
+    [SerializeField] private Image portrait;
 
     [SerializeField] private GameObject[] focusButtons;
     [SerializeField] private Text title;
@@ -67,7 +67,7 @@ public class PartyManager : MonoBehaviour
         lastUnit = unit;
         //fill in info:
 
-        //portrait = lastUnit.portrait
+        portrait.sprite = lastUnit.get_moveSelectPortrait();
         title.text = lastUnit.get_nom();
 
         //scrollview

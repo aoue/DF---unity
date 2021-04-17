@@ -90,6 +90,38 @@ public class PopulateScroller : MonoBehaviour
         }
     }
 
+    public void populate_outH_moves(PlayerMove[] contents, int unitMp)
+    {
+        //clear the list (we keep the first child, because that's the template and we need that)
+        GameObject tester = gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject; //<-- this is Content
+
+        for (var i = tester.transform.childCount - 1; i >= 1; i--)
+        {
+            Destroy(tester.transform.GetChild(i).gameObject);
+        }
+
+        //populate the list
+        for (int i = 0; i < contents.Length; i++)
+        {
+            //generates a new button
+            GameObject entry = Instantiate(entryTemplate) as GameObject;
+            //also, set an identifier to 'i'
+            entry.SetActive(true);
+
+            entry.GetComponent<ScrollerObject>().set_text(contents[i].get_title());
+            entry.GetComponent<ScrollerObject>().id = i;
+            entry.transform.SetParent(entryTemplate.transform.parent, false); //the false is to control its position.
+
+            if (contents[i].get_mpDrain() > unitMp)
+            {
+                entry.GetComponent<Button>().interactable = false; //<- i don't think this works
+                //something that would work is changing the color of the box though.
+            }
+        }
+
+
+    }
+
     //populates the scroller with moves
     public void populate_moves(PlayerMove[] contents)
     {

@@ -12,6 +12,7 @@ public class ScrollerObject : MonoBehaviour
     [SerializeField] private QuestManager qManager; //quest manager
     [SerializeField] private EncyclopediaManager eManager; //encyclopedia manager
     [SerializeField] private InventoryManager iManager; //inventory manager
+    [SerializeField] private OutHealer oHealer; //outhealer
 
     public void set_text(string newText)
     {
@@ -19,6 +20,16 @@ public class ScrollerObject : MonoBehaviour
     }
 
     //on hover (also, use id and lastUnit to make sure you show the right thing): change colour
+
+    public void call_heal_move()
+    {
+        oHealer.click_move(id);
+    }
+    public void call_hover_move()
+    {
+        oHealer.hover_move(id);
+    }
+
 
     public void call_manage_equipment()
     {

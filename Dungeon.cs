@@ -23,7 +23,7 @@ public class Dungeon : MonoBehaviour
 
     [SerializeField] private Formation[] formationList;
 
-    [SerializeField] private GameObject[] mobs;
+    [SerializeField] private GameObject[] mobs; //used to control the mobs overworld representations in a certain scene. 
     
     //loot
     [SerializeField] private Loot[] chestItems;

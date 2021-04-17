@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-//in charge of managing everything. god.
+//in charge of managing everything. god. (in both senses) (ctrl-m -> ctrl-o)
 public class WorldManager : MonoBehaviour
 {
     //SINGLETON STUFF
@@ -74,6 +74,7 @@ public class WorldManager : MonoBehaviour
     //DUNGEON MANAGEMENT
     [SerializeField] private DungeonManager dungeonManager;
     [SerializeField] private GameObject dungeonOverlay;
+    [SerializeField] private OutHealer hManager;
     private static bool inDungeon = true; //true if in dungeon, false if not. controls a bunch of overlay stuff.
 
     //EXAMINATION
@@ -102,7 +103,6 @@ public class WorldManager : MonoBehaviour
     [SerializeField] private PlayerMove pm;
 
     //JUMPING SCENES W/ PORTALS
-
     public static void open_portal(int portalKey)
     {
         //called when player moves into a portal's area
@@ -275,24 +275,40 @@ public class WorldManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && inPortal)
         {
+            //warp maps
             jump_portal();
         }
-        else if (Input.GetMouseButtonDown(1) && !inBattle && !inDialogue)
+        else if (!inBattle && !inDialogue)
         {
-            if (!isPaused)
+            if (Input.GetMouseButtonDown(1))
             {
-                isPaused = true;
-                hide_owPreviews();
-                triMenu.open(party, dateAndTime);
+                //open/close trimenu
+                if (!isPaused)
+                {
+                    isPaused = true;
+                    hide_owPreviews();
+                    triMenu.open(party, dateAndTime);
+                }
+                else if (isPaused && triMenu.gameObject.active)
+                {
+                    isPaused = false;
+                    triMenu.gameObject.SetActive(false);
+                    show_owPreviews();
+                }
             }
-            else if (isPaused && triMenu.gameObject.active)
+            else if (Input.GetKeyDown(KeyCode.H))
             {
-                isPaused = false;               
-                triMenu.gameObject.SetActive(false);
-                show_owPreviews();
-            }           
+                //open outHealer
+                open_healer();
+            }
+                   
         }
         
+    }
+    public void open_healer()
+    {
+        isPaused = true;
+        hManager.open_outHealer(party);
     }
     public void open_party(int index)
     {
@@ -394,16 +410,15 @@ public class WorldManager : MonoBehaviour
 
     
     //OVERWORLD PARTY PREVIEW
-    private void show_owPreviews()
+    public void show_owPreviews()
     {
         //this is always visible, except when we're in dialogue or in cutscene
         //Debug.Log("show ow previews called");
         
-        
-
         for (int i = 0; i < party.Length; i++)
         {
             owCharsPreviews[i].SetActive(true);
+            owCharsPreviews[i].gameObject.GetComponent<Image>().sprite = party[i].get_tilePortrait();
             //update go -> img
 
             //update go -> hp slider, mp slider

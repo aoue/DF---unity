@@ -16,6 +16,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private bool appliesStatus;
     [SerializeField] private bool hasCustomHeal;
     [SerializeField] private bool ignoreHealMax;
+    [SerializeField] private bool isOutOfBattleHeal;
 
     [SerializeField] private int strikes = 1; //how many times the attack hits. usually 1.
     [SerializeField] private int hit;
@@ -66,7 +67,8 @@ public class PlayerMove : MonoBehaviour
     public int get_clearX() { return clearX; }
     public int get_clearY() { return clearY; }
     public int get_mpDrain() { return mpDrain; }
- 
+    public bool get_isOutOfBattleHeal() { return isOutOfBattleHeal; }
+
     //on return false, the move is not selectable
     public bool check_pre(int unit_x, int unit_y, PlayerMap pMap, int mp)
     {

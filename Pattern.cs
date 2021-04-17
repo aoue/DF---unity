@@ -21,6 +21,7 @@ using UnityEngine.UI;
 
 public class Pattern : MonoBehaviour
 {
+    [SerializeField] private Sprite blank_tile_img;
     [SerializeField] private GameObject triMenu;
     [SerializeField] private GameObject unitPreviewArea;
     [SerializeField] private Text unitPreviewAreaText;
@@ -66,11 +67,12 @@ public class Pattern : MonoBehaviour
     public void load_mainView(PlayerUnit[] party)
     {
         //called on startup
-
+        selectedUnit = null;
+        unitPreviewArea.SetActive(false);
         //draw each unit's tilePortrait on their appropriate tile
-        foreach(PlayerUnit unit in party)
+        foreach (PlayerUnit unit in party)
         {
-            Debug.Log(unit.get_nom() + "at y=" + unit.get_y() + " x=" + unit.get_x());
+            Debug.Log(unit.get_nom() + " at y=" + unit.get_y() + " x=" + unit.get_x());
             tilegrid[unit.get_x(), unit.get_y()].gameObject.GetComponent<Image>().sprite = unit.get_tilePortrait();
             grid[unit.get_y(), unit.get_x()] = unit;
         }
@@ -81,45 +83,45 @@ public class Pattern : MonoBehaviour
         //when a tile is moused over, if there is no unit, then highlight it
         if (grid[tile.get_tileX(), tile.get_tileY()] == null)
         {
-            tilegrid[tile.get_tileY(), tile.get_tileX()].color = new Color(0 / 255f, 0 / 255f, 0 / 255f); //change colour
+            //Debug.Log("trying to highlight tile " + tile.get_tileY() + ", " + tile.get_tileX());
+            tilegrid[tile.get_tileY(), tile.get_tileX()].color = new Color(0 / 255f, 0 / 255f, 150 / 255f); //change colour
         }
-        else
+        else //if there is a unit, preview it and highlight it lighting
         {
             preview_unit(grid[tile.get_tileX(), tile.get_tileY()]);
+            tilegrid[tile.get_tileY(), tile.get_tileX()].color = new Color(0 / 255f, 150 / 255f, 150 / 255f); //change colour
         }
     }
     public void unhighlight_tile(PatternSlot tile)
-    {
-        if(grid[tile.get_tileX(), tile.get_tileY()] == null)
+    {       
+        if (selectedUnit != null)
         {
-            tilegrid[tile.get_tileY(), tile.get_tileX()].color = new Color(255f / 255f, 255f / 255f, 255f / 255f); //make white
+            preview_unit(selectedUnit);           
         }
-        else
-        {
-            if (selectedUnit != null)
-            {
-                preview_unit(selectedUnit);
-            }
-        }
+        tilegrid[tile.get_tileY(), tile.get_tileX()].color = new Color(255f / 255f, 255f / 255f, 255f / 255f); //make white
     }
     public void click_tile(PatternSlot tile)
     {
         //if the tile WITHOUT a unit on it is clicked
         if (grid[tile.get_tileX(), tile.get_tileY()] == null) //if tile has no unit on it
         {
-            if(selectedUnit != null)
+            if(selectedUnit != null) //if a unit is selected
             {
-                //set old tile to blank
-                tilegrid[selectedUnit.get_x(), selectedUnit.get_y()] = null; //or whatever. full white.
+                ////set tile image image back to default
+                tilegrid[tile.get_tileY(), tile.get_tileX()].color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                tilegrid[selectedUnit.get_x(), selectedUnit.get_y()].gameObject.GetComponent<Image>().sprite = blank_tile_img;
+
                 grid[selectedUnit.get_y(), selectedUnit.get_x()] = null; //remove unit from grid
 
                 //set new tile to unit's tileportrait
-                tilegrid[tile.get_tileX(), tile.get_tileY()].sprite = selectedUnit.get_tilePortrait();
+                tilegrid[tile.get_tileY(), tile.get_tileX()].sprite = selectedUnit.get_tilePortrait();
+
                 selectedUnit.set_x(tile.get_tileY());
                 selectedUnit.set_y(tile.get_tileX());
-                grid[selectedUnit.get_x(), selectedUnit.get_y()] = selectedUnit;
-                Debug.Log("placed " + selectedUnit.get_nom() + " at y=" + selectedUnit.get_y() + " x=" + selectedUnit.get_x());
 
+                grid[selectedUnit.get_y(), selectedUnit.get_x()] = selectedUnit;
+                //Debug.Log("placed " + selectedUnit.get_nom() + " at y=" + selectedUnit.get_y() + " x=" + selectedUnit.get_x());
+                selectedUnit = null;
             }
         }
         //if the tile has a unit on it
@@ -127,7 +129,7 @@ public class Pattern : MonoBehaviour
         {
             selectedUnit = grid[tile.get_tileX(), tile.get_tileY()];
             preview_unit(selectedUnit);
-            Debug.Log("selected " + selectedUnit.get_nom() + "at y=" + selectedUnit.get_y() + " x=" + selectedUnit.get_x());
+            //Debug.Log("selected " + selectedUnit.get_nom() + "at y=" + selectedUnit.get_y() + " x=" + selectedUnit.get_x());
 
         }
     }
@@ -146,6 +148,7 @@ public class Pattern : MonoBehaviour
         unitPreviewAreaText.text = unit.get_nom() + "\nLvl " + unit.get_level() + "\n" 
             + unit.get_hp() + "/" + unit.get_hpMax_actual() + "\n" + unit.get_mp() + "/" + unit.get_mpMax_actual();
 
+        //show moves too? just small like. each move can be moused over for more info.
     }
 
     public void assign_strategy()

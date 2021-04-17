@@ -74,7 +74,7 @@ public class CombatLogic : MonoBehaviour
     [SerializeField] private GameObject actingPreviewWindow; //shows data on currentUnit when unit is choosing a move. shows name, hp, and mp.
 
     //unit acting portrait
-    [SerializeField] private GameObject actingUnitImage; //used to show image for acting unit. dimensions: 300w, 565h
+    [SerializeField] private GameObject actingUnitImage; //used to show image for acting unit. dimensions: 300w, 750h
     private bool isPortraitLocked; //when true, portrait cannot be shown.
 
 
@@ -961,7 +961,7 @@ public class CombatLogic : MonoBehaviour
 
         if (!isPortraitLocked)
         {
-            //actingUnitImage.gameObject.GetComponent<Image>().sprite = currentUnit.get_moveSelectPortrait();
+            actingUnitImage.gameObject.GetComponent<Image>().sprite = currentUnit.get_moveSelectPortrait();
             //^^uncomment line to turn on unit's images. otherwise will just be a white background.
 
 

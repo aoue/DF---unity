@@ -13,10 +13,20 @@ public class TriMenu : MonoBehaviour
     [SerializeField] private Image[] partyPortraits;
     [SerializeField] private Text buttonDescripton;
     [SerializeField] private Text dateAndTime;
+    [SerializeField] private string[] partyUnitNames;
 
     public void open(PlayerUnit[] party, string DAT)
     {
+        string[] names = new string[party.Length];
+        for (int i = 0; i < party.Length; i++)
+        {
+            names[i] = party[i].get_nom();
+        }
+        partyUnitNames = names;
+
         gameObject.SetActive(true);
+
+        //set party portraits
 
         dateAndTime.text = DAT;
 
@@ -26,6 +36,7 @@ public class TriMenu : MonoBehaviour
         {
             //partyPortraits[count] = party[count].get_portrait();
             partyPortraits[count].gameObject.SetActive(true);
+            partyPortraits[count].sprite = party[count].get_moveSelectPortrait();
             count++;
         }
         while(count < partyPortraits.Length)
@@ -70,16 +81,20 @@ public class TriMenu : MonoBehaviour
             case 6: //game settings
                 buttonDescripton.text = "Adjust Settings";
                 break;
+            case 7: //party unit 0
+                buttonDescripton.text = "Inspect - " + partyUnitNames[0];
+                break;
+            case 8: //party unit 1
+                buttonDescripton.text = "Inspect - " + partyUnitNames[1];
+                break;
+            case 9: //party unit 2
+                buttonDescripton.text = "Inspect - " + partyUnitNames[2];
+                break;
+            case 10: //party unit 3
+                buttonDescripton.text = "Inspect - " + partyUnitNames[3];
+                break;
         }
-    
-
     }
 
-    public void hover_over_partyMember(int index)
-    {
-        //changes party unit's image when being hovered over
-
-        //also adds some char info too? idk
-    }
 
 }
